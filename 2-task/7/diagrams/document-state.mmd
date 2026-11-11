@@ -4,31 +4,42 @@ title: Жизненный цикл Документа
 stateDiagram-v2
     direction LR
 
-    state "Загружен (queued)" as Uploaded
-    state "Обрабатывается (processing)" as Processing
-    state "Проиндексирован (ready)" as Indexed
-    state "Ошибка обработки (failed)" as Failed
-    state "Удалён (удалён из БЗ и БД)" as Deleted
+    state "Загружен" as Uploaded
+    state "Обрабатывается" as Processing
+    state "Проиндексирован" as Indexed
+    state "Ошибка обработки" as Failed
+    state "Повторная обработка" as Reprocessing
+    state "Удалён" as Deleted
 
     [*] --> Uploaded : администратор загрузил файл
     Uploaded --> Processing : задание обработки принято в работу
 
-    Processing --> Indexed : текст извлечён, чанки эмбеддингированы и записаны
-    Processing --> Failed : сбой разбора, эмбеддинга или записи в векторную БД
+    Processing --> Indexed : материалы подготовлены и опубликованы
+    Processing --> Failed : содержимое непригодно или публикация не удалась
 
     Failed --> Processing : повторная обработка по запросу администратора
-    Indexed --> Processing : переиндексация (актуализация данных)
+    Indexed --> Reprocessing : запуск переиндексации
+    Reprocessing --> Indexed : публикация новой версии
+    Reprocessing --> Indexed : сбой обработки - прежняя версия продолжает обслуживаться
 
     Indexed --> Deleted : удаление документа из базы знаний
     Deleted --> [*]
 
     note right of Indexed
-        Единственное состояние, из которого
-        документ участвует в поиске и
-        формировании ответов (BR1, BR4).
+        Документ опубликован и участвует
+        в поиске и формировании ответов.
+        Во время переиндексации продолжает
+        обслуживаться прежней версией (BR1, BR4, BR8).
+    end note
+
+    note right of Failed
+        Документ не опубликован и в поиске
+        не участвует. Ошибка наблюдаема
+        администратором (BR4, BR15).
     end note
 
     note right of Deleted
-        Содержимое и поисковые индексы
-        физически уничтожены (BR7).
+        Содержимое удалено из базы знаний,
+        документ исключён из подборки
+        материалов для ответов (BR7).
     end note

@@ -4,21 +4,35 @@ title: Жизненный цикл Задания обработки
 stateDiagram-v2
     direction LR
 
-    state "Создано (queued)" as Created
-    state "Выполняется (processing)" as Running
-    state "Успешно завершено (ready)" as Done
-    state "Завершено с ошибкой (failed)" as Failed
-    state "Зависло в очереди (queued + error)" as Stuck
+    state "Создано" as Created
+    state "Выполняется" as Running
+    state "Успешно завершено" as Done
+    state "Завершено с ошибкой" as Failed
+    state "Зависло в очереди" as Stuck
 
     [*] --> Created : задание создано вместе с документом
 
-    Created --> Running : worker принял задание в работу
+    Created --> Running : задание принято в обработку
     Created --> Stuck : не удалось поставить задание в очередь
 
     Stuck --> Created : повторная постановка в очередь
 
-    Running --> Done : документ проиндексирован, progress = 100
-    Running --> Failed : сбой обработки, причина сохранена в error
+    Running --> Done : обработка завершена успешно
+    Running --> Failed : сбой обработки, причина сохранена
 
     Done --> [*]
     Failed --> [*]
+
+    note right of Created
+        Тип операции задаётся при создании:
+        обработка документа, удаление
+        документа или повторная обработка.
+        Наблюдаемо администратором (BR15).
+    end note
+
+    note right of Failed
+        Задание с типом операции "удаление"
+        оставляет документ исключённым из
+        подборки материалов: содержимое не
+        удалено, требуется повтор операции (BR7).
+    end note
