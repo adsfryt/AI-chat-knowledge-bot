@@ -1,0 +1,34 @@
+---
+title: Жизненный цикл Документа
+---
+stateDiagram-v2
+    direction LR
+
+    state "Загружен (queued)" as Uploaded
+    state "Обрабатывается (processing)" as Processing
+    state "Проиндексирован (ready)" as Indexed
+    state "Ошибка обработки (failed)" as Failed
+    state "Удалён (удалён из БЗ и БД)" as Deleted
+
+    [*] --> Uploaded : администратор загрузил файл
+    Uploaded --> Processing : задание обработки принято в работу
+
+    Processing --> Indexed : текст извлечён, чанки эмбеддингированы и записаны
+    Processing --> Failed : сбой разбора, эмбеддинга или записи в векторную БД
+
+    Failed --> Processing : повторная обработка по запросу администратора
+    Indexed --> Processing : переиндексация (актуализация данных)
+
+    Indexed --> Deleted : удаление документа из базы знаний
+    Deleted --> [*]
+
+    note right of Indexed
+        Единственное состояние, из которого
+        документ участвует в поиске и
+        формировании ответов (BR1, BR4).
+    end note
+
+    note right of Deleted
+        Содержимое и поисковые индексы
+        физически уничтожены (BR7).
+    end note
