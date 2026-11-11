@@ -1,0 +1,32 @@
+---
+title: Жизненный цикл Диалога
+---
+stateDiagram-v2
+    direction LR
+
+    state "Создан" as Created
+    state "Активен" as Active
+    state "Завершён" as Finished
+    state "Удалён" as Deleted
+
+    [*] --> Created : первый вопрос или явное создание диалога
+
+    Created --> Active : обмен сообщениями с AI-ассистентом
+    Active --> Active : новый вопрос в том же диалоге
+
+    Active --> Finished : пользователь завершил работу с диалогом
+    Finished --> Active : возврат к диалогу из истории
+
+    Active --> Deleted : удаление диалога
+    Finished --> Deleted : удаление диалога
+
+    Deleted --> [*]
+
+    note right of Finished
+        История диалога сохраняется
+        и доступна для последующего
+        просмотра. Это продуктовое
+        решение (Vision & Scope, раздел
+        "Хранение и просмотр истории
+        диалогов").
+    end note
