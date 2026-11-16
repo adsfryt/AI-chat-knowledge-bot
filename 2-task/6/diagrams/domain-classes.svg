@@ -45,6 +45,7 @@
 <text xml:space="preserve" text-anchor="middle" x="167.23" y="-659.2" font-family="Arial" font-size="11.00" fill="#334155">owns</text>
 <text xml:space="preserve" text-anchor="middle" x="185.7" y="-456.32" font-family="Arial" font-size="11.00" fill="#334155">0..*</text>
 <text xml:space="preserve" text-anchor="middle" x="167.95" y="-862.25" font-family="Arial" font-size="11.00" fill="#334155">1</text>
+<polygon fill="#64748b" stroke="#64748b" points="176.83,-884.58 172.83,-876.58 176.83,-868.58 180.83,-876.58"/>
 </g>
 <!-- Company&#45;&gt;Widget -->
 <g id="e15" class="edge">
@@ -93,6 +94,7 @@
 <text xml:space="preserve" text-anchor="middle" x="387.97" y="-322.77" font-family="Arial" font-size="11.00" fill="#334155">contains</text>
 <text xml:space="preserve" text-anchor="middle" x="437.24" y="-305.68" font-family="Arial" font-size="11.00" fill="#334155">0..*</text>
 <text xml:space="preserve" text-anchor="middle" x="339.58" y="-312.64" font-family="Arial" font-size="11.00" fill="#334155">1</text>
+<polygon fill="#64748b" stroke="#64748b" points="323.38,-329.30 330.12,-323.42 338.87,-325.29 332.13,-331.17"/>
 </g>
 <!-- KnowledgeBase&#45;&gt;Conversation -->
 <g id="e11" class="edge">
