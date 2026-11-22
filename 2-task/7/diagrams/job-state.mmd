@@ -5,17 +5,18 @@ stateDiagram-v2
     direction LR
 
     state "Создано" as Created
+    state "В очереди" as Queued
     state "Выполняется" as Running
     state "Успешно завершено" as Done
     state "Завершено с ошибкой" as Failed
-    state "Зависло в очереди" as Stuck
+    state "Не принято в обработку" as NotAccepted
 
     [*] --> Created : задание создано вместе с документом
 
-    Created --> Running : задание принято в обработку
-    Created --> Stuck : не удалось поставить задание в очередь
-
-    Stuck --> Created : повторная постановка в очередь
+    Created --> Queued : задание принято в очередь обработки
+    Created --> NotAccepted : очередь обработки недоступна
+    NotAccepted --> Queued : повторная постановка выполнена
+    Queued --> Running : задание взято исполнителем в работу
 
     Running --> Done : обработка завершена успешно
     Running --> Failed : сбой обработки, причина сохранена
@@ -28,6 +29,14 @@ stateDiagram-v2
         обработка документа, удаление
         документа или повторная обработка.
         Наблюдаемо администратором (BR15).
+    end note
+
+    note right of NotAccepted
+        Задание не попало в очередь и до
+        повторной постановки обработке
+        не подлежит. Причина сохранена
+        в задании, документ остаётся
+        в статусе 'Загружен' (BR15).
     end note
 
     note right of Failed
